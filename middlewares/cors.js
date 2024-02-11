@@ -1,6 +1,6 @@
 const allowedCors = [
-  "https://ikorka01.nomoredomainsmonster.ru",
-  "http://ikorka01.nomoredomainsmonster.ru",
+  "https://ikorka01.nomoredomainswork.ru",
+  "http://ikorka01.nomoredomainswork.ru",
   "http://localhost:3001",
 ];
 module.exports = (req, res, next) => {
