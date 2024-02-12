@@ -1,12 +1,9 @@
-const {
-  OK,
-
-  CREATED_OK,
-} = require("../app");
+const { OK, CREATED_OK } = require("../app");
 const Movie = require("../models/movie");
-const NotFoundError = require("../errors/NotFoundError.js"); // 404
-const BadRequestError = require("../errors/BadRequestError.js"); // 400
-const UserError = require("../errors/UserError.js"); // 403
+const NotFoundError = require("../errors/NotFoundError"); // 404
+const BadRequestError = require("../errors/BadRequestError"); // 400
+const UserError = require("../errors/UserError");
+// 403
 module.exports.getMovies = async (req, res, next) => {
   try {
     const movies = await Movie.find({});
@@ -16,26 +13,30 @@ module.exports.getMovies = async (req, res, next) => {
   }
 };
 module.exports.deleteMovie = (req, res, next) => {
-  Movie.findById(req.params.movieId).then((movie) => {
-    if (!movie) {
-      next(new NotFoundError("Карточка не найдена"));
-      return;
-    }
-    if (movie.owner.toString() !== req.user._id) {
-      next(new UserError("Невозможно удалить чужую карточку"));
-      return;
-    }
-    movie
-      .deleteOne()
-      .then(() => res.send({ message: "Карточка удалена" }))
-      .catch((err) => {
-        if (err.name === "CastError") {
-          next(new BadRequestError("Переданы некорректные данные"));
-        } else {
-          next(err);
-        }
-      });
-  });
+  Movie.findById(req.params.movieId)
+    .then((movie) => {
+      if (!movie) {
+        next(new NotFoundError("Карточка не найдена"));
+        return;
+      }
+      if (movie.owner.toString() !== req.user._id) {
+        next(new UserError("Невозможно удалить чужую карточку"));
+        return;
+      }
+      movie
+        .deleteOne()
+        .then(() => res.send({ message: "Карточка удалена" }))
+        .catch((err) => {
+          if (err.name === "CastError") {
+            next(new BadRequestError("Переданы некорректные данные"));
+          } else {
+            next(err);
+          }
+        });
+    })
+    .catch((err) => {
+      return next(err);
+    });
 };
 
 module.exports.addMovie = async (req, res, next) => {

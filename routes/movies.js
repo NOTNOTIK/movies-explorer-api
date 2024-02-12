@@ -1,20 +1,20 @@
-const movieRouter = require("express").Router();
-const { getMovies, deleteMovie, addMovie } = require("../controllers/movies");
-const { celebrate, Joi } = require("celebrate");
+const movieRouter = require('express').Router();
+const { celebrate, Joi } = require('celebrate');
+const { getMovies, deleteMovie, addMovie } = require('../controllers/movies');
 
-movieRouter.get("/", getMovies);
+movieRouter.get('/', getMovies);
 
 movieRouter.delete(
-  "/:movieId",
+  '/:movieId',
   celebrate({
     params: Joi.object().keys({
       movieId: Joi.string().hex().length(24).required(),
     }),
   }),
-  deleteMovie
+  deleteMovie,
 );
 movieRouter.post(
-  "/",
+  '/',
   celebrate({
     body: Joi.object().keys({
       country: Joi.string().required(),
@@ -25,23 +25,23 @@ movieRouter.post(
       image: Joi.string()
         .required()
         .pattern(
-          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
+          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/,
         ),
       trailerLink: Joi.string()
         .required()
         .pattern(
-          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
+          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/,
         ),
       thumbnail: Joi.string()
         .required()
         .pattern(
-          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/
+          /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/,
         ),
       movieId: Joi.number().required(),
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
     }),
   }),
-  addMovie
+  addMovie,
 );
 module.exports = movieRouter;

@@ -1,13 +1,15 @@
-const { OK } = require("../app");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const { OK } = require("../app");
 const User = require("../models/user");
+
 const { NODE_ENV, JWT_SECRET } = process.env;
 
-const NotFoundError = require("../errors/NotFoundError.js"); // 404
-const BadRequestError = require("../errors/BadRequestError.js"); // 400
-const ConflictError = require("../errors/ConflictError.js"); // 409
-const AuthError = require("../errors/AuthError.js"); // 401
+const NotFoundError = require("../errors/NotFoundError"); // 404
+const BadRequestError = require("../errors/BadRequestError"); // 400
+const ConflictError = require("../errors/ConflictError"); // 409
+const AuthError = require("../errors/AuthError");
+// 401
 module.exports.getUsers = async (req, res, next) => {
   try {
     const users = await User.find({});
@@ -20,9 +22,7 @@ module.exports.getUsers = async (req, res, next) => {
 module.exports.getUserById = (req, res, next) => {
   User.findById(req.user._id)
     .orFail()
-    .then((user) => {
-      return res.status(OK).send(user);
-    })
+    .then((user) => res.status(OK).send(user))
     .catch((err) => {
       if (err.name === "DocumentNotFoundError") {
         return next(new NotFoundError("Пользователь с таким ID не найден"));
@@ -46,17 +46,11 @@ module.exports.createUser = (req, res, next) => {
     .then((hash) =>
       User.create({
         name,
-        about,
-        avatar,
         email,
         password: hash,
       })
     )
-    .then((user) => {
-      return res
-        .status(OK)
-        .json(user.name, user.about, user.avatar, user.email);
-    })
+    .then((user) => res.status(OK).json({ name: user.name, email: user.email }))
     .catch((err) => {
       if (err.code === 11000) {
         return next(
@@ -68,20 +62,19 @@ module.exports.createUser = (req, res, next) => {
 };
 module.exports.updateUser = (req, res, next) => {
   const owner = req.user._id;
-  const { name, about } = req.body;
+  const { name, email } = req.body;
   User.findByIdAndUpdate(
     owner,
-    { name, about },
+    { name, email },
     { new: true, runValidators: true }
   )
     .orFail()
-    .then((user) => {
-      return res.status(OK).send(user);
-    })
+    .then((user) => res.status(OK).send(user))
     .catch((err) => {
       if (err.name === "ValidationError") {
         return next(new BadRequestError("Невалидные данные"));
-      } else if (err.name === "DocumentNotFoundError") {
+      }
+      if (err.name === "DocumentNotFoundError") {
         return next(new NotFoundError("ID not found"));
       }
       return next(err);

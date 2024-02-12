@@ -1,6 +1,7 @@
-const { ObjectId } = require("mongodb");
-const mongoose = require("mongoose");
-const validator = require("validator");
+const { ObjectId } = require('mongodb');
+const mongoose = require('mongoose');
+const validator = require('validator');
+
 const movieSchema = new mongoose.Schema(
   {
     country: {
@@ -27,7 +28,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: (v) => validator.isURL(v),
-        message: "Неправильная ссылка",
+        message: 'Неправильная ссылка',
       },
       required: true,
     },
@@ -35,7 +36,7 @@ const movieSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: (v) => validator.isURL(v),
-        message: "Неправильная ссылка",
+        message: 'Неправильная ссылка',
       },
       required: true,
     },
@@ -43,19 +44,19 @@ const movieSchema = new mongoose.Schema(
       type: String,
       validate: {
         validator: (v) => validator.isURL(v),
-        message: "Неправильная ссылка",
+        message: 'Неправильная ссылка',
       },
       required: true,
     },
     owner: {
       type: ObjectId,
       required: true,
-      ref: "user",
+      ref: 'user',
     },
     movieId: {
       type: Number,
       required: true,
-      ref: "user",
+      ref: 'user',
     },
     nameRU: {
       type: String,
@@ -66,7 +67,7 @@ const movieSchema = new mongoose.Schema(
       required: true,
     },
   },
-  { versionKey: false }
+  { versionKey: false },
 );
 
-module.exports = mongoose.model("movie", movieSchema);
+module.exports = mongoose.model('movie', movieSchema);
