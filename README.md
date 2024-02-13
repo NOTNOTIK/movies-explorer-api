@@ -6,10 +6,8 @@
 
 ## Ссылки на проект
 
-IP-адрес ...
+IP-адрес 84.201.143.173
 
-Frontend ...
+Frontend https://ikorka01.nomoredomainswork.ru
 
-Backend ...
-
-## помогите я не могу
+Backend https://api.ikorka01.nomoredomainswork.ru
