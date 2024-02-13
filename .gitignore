@@ -13,4 +13,10 @@ node_modules
 .DS_Store
 .idea
 .vscode
+
+# dotenv environment variable files
 .env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
