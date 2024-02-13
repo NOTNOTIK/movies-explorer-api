@@ -1,12 +1,13 @@
-const { OK, CREATED_OK } = require("../app");
-const Movie = require("../models/movie");
-const NotFoundError = require("../errors/NotFoundError"); // 404
-const BadRequestError = require("../errors/BadRequestError"); // 400
-const UserError = require("../errors/UserError");
+const { OK, CREATED_OK } = require('../app');
+const Movie = require('../models/movie');
+const NotFoundError = require('../errors/NotFoundError'); // 404
+const BadRequestError = require('../errors/BadRequestError'); // 400
+const UserError = require('../errors/UserError');
 // 403
 module.exports.getMovies = async (req, res, next) => {
   try {
-    const movies = await Movie.find({});
+    const owner = req.user._id;
+    const movies = await Movie.find({ owner });
     return res.status(OK).json(movies);
   } catch (err) {
     return next(err);
@@ -16,27 +17,25 @@ module.exports.deleteMovie = (req, res, next) => {
   Movie.findById(req.params.movieId)
     .then((movie) => {
       if (!movie) {
-        next(new NotFoundError("Карточка не найдена"));
+        next(new NotFoundError('Карточка не найдена'));
         return;
       }
       if (movie.owner.toString() !== req.user._id) {
-        next(new UserError("Невозможно удалить чужую карточку"));
+        next(new UserError('Невозможно удалить чужую карточку'));
         return;
       }
       movie
         .deleteOne()
-        .then(() => res.send({ message: "Карточка удалена" }))
+        .then(() => res.send({ message: 'Карточка удалена' }))
         .catch((err) => {
-          if (err.name === "CastError") {
-            next(new BadRequestError("Переданы некорректные данные"));
+          if (err.name === 'CastError') {
+            next(new BadRequestError('Переданы некорректные данные'));
           } else {
             next(err);
           }
         });
     })
-    .catch((err) => {
-      return next(err);
-    });
+    .catch((err) => next(err));
 };
 
 module.exports.addMovie = async (req, res, next) => {
@@ -70,9 +69,9 @@ module.exports.addMovie = async (req, res, next) => {
     });
     return res.status(CREATED_OK).json(movie);
   } catch (err) {
-    if (err.name === "ValidationError") {
+    if (err.name === 'ValidationError') {
       return next(
-        new BadRequestError("Невалидные данные при создании карточки")
+        new BadRequestError('Невалидные данные при создании карточки'),
       );
     }
     return next(err);

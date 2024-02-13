@@ -1,8 +1,9 @@
-const router = require("express").Router();
-const { Joi, celebrate } = require("celebrate");
-const { createUser } = require("../controllers/users");
+const router = require('express').Router();
+const { Joi, celebrate } = require('celebrate');
+const { createUser } = require('../controllers/users');
+
 router.post(
-  "/",
+  '/',
   celebrate({
     body: Joi.object().keys({
       name: Joi.string().required().min(2).max(30),
@@ -10,7 +11,7 @@ router.post(
       password: Joi.string().required(),
     }),
   }),
-  createUser
+  createUser,
 );
 
 module.exports = router;
