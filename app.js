@@ -12,7 +12,14 @@ const SERVER_ERROR = 500;
 const ERROR_NOT_FOUND = 404;
 const OK = 200;
 const CREATED_OK = 201;
-
+const corsOptions = {
+  origin: [
+    "https://ikorka01.nomoredomainswork.ru",
+    "http://ikorka01.nomoredomainswork.ru",
+    "http://localhost:3000",
+  ],
+  credentials: true,
+};
 const auth = require("./middlewares/auth");
 const NotFoundError = require("./errors/NotFoundError"); // 404
 const { requestLogger, errorLogger } = require("./middlewares/logger");
@@ -26,7 +33,7 @@ module.exports = {
   OK,
   CREATED_OK,
 };
-app.use(cors());
+app.use(cors(corsOptions));
 
 mongoose.connect(DATA_URL);
 app.use(
