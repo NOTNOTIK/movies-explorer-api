@@ -5,21 +5,14 @@ const cors = require("cors");
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
-
+const { allowedCors } = require("./middlewares/cors");
 const app = express();
 const ERROR_CODE = 400;
 const SERVER_ERROR = 500;
 const ERROR_NOT_FOUND = 404;
 const OK = 200;
 const CREATED_OK = 201;
-const corsOptions = {
-  origin: [
-    "https://ikorka01.nomoredomainswork.ru",
-    "http://ikorka01.nomoredomainswork.ru",
-    "http://localhost:3000",
-  ],
-  credentials: true,
-};
+
 const auth = require("./middlewares/auth");
 const NotFoundError = require("./errors/NotFoundError"); // 404
 const { requestLogger, errorLogger } = require("./middlewares/logger");
@@ -33,8 +26,12 @@ module.exports = {
   OK,
   CREATED_OK,
 };
-app.use(cors(corsOptions));
+app.use(cors(allowedCors));
 
+app.use((req, res, next) => {
+  res.header({ "Access-Control-Allow-Origin": "*" });
+  next();
+});
 mongoose.connect(DATA_URL);
 app.use(
   helmet({
