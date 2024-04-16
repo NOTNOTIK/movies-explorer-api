@@ -1,12 +1,28 @@
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
+
 const cors = require("cors");
+
+const options = {
+  origin: [
+    "http://localhost:3001",
+    "https://api.ikorka01.nomoredomainswork.ru",
+    "http://api.ikorka01.nomoredomainswork.ru",
+  ],
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
+  preflightContinue: false,
+  optionsSuccessStatus: 204,
+  allowedHeaders: ["Content-Type", "origin", "Authorization"],
+  credentials: true,
+};
+
 const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const { errors } = require("celebrate");
-const { allowedCors } = require("./middlewares/cors");
+
 const app = express();
+app.use(cors(options));
 const ERROR_CODE = 400;
 const SERVER_ERROR = 500;
 const ERROR_NOT_FOUND = 404;
@@ -26,7 +42,6 @@ module.exports = {
   OK,
   CREATED_OK,
 };
-app.use(cors(allowedCors));
 
 app.use((req, res, next) => {
   res.header({ "Access-Control-Allow-Origin": "*" });
