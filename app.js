@@ -7,8 +7,8 @@ const cors = require("cors");
 const options = {
   origin: [
     "http://localhost:3001",
-    "https://api.ikorka01.nomoredomainswork.ru",
-    "http://api.ikorka01.nomoredomainswork.ru",
+    "https://ikorka01.nomoredomainswork.ru",
+    "http://ikorka01.nomoredomainswork.ru",
   ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   preflightContinue: false,
